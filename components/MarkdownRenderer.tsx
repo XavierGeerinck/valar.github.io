@@ -53,7 +53,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
                {props.alt && <figcaption className="text-center text-xs text-zinc-500 mt-3 font-mono uppercase tracking-widest">{props.alt}</figcaption>}
              </figure>
           ),
-          code({node, inline, className, children, ...props}) {
+          code(props: any) {
+            const {node, inline, className, children, ...rest} = props;
             const match = /language-(\w+)/.exec(className || '');
             const codeString = String(children).replace(/\n$/, '');
             const codeId = codeString.length; 
@@ -82,7 +83,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
                 
                 {/* Code Content */}
                 <SyntaxHighlighter
-                  style={vscDarkPlus}
+                  style={vscDarkPlus as any}
                   language={match[1]}
                   PreTag="div"
                   customStyle={{ 
@@ -95,13 +96,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
                   }} 
                   showLineNumbers={true}
                   lineNumberStyle={{ minWidth: '2.5em', paddingRight: '1em', color: '#52525b', textAlign: 'right' }}
-                  {...props}
+                  {...rest}
                 >
                   {codeString}
                 </SyntaxHighlighter>
               </div>
             ) : (
-              <code className="bg-zinc-800/80 text-indigo-300 px-1.5 py-0.5 rounded font-mono text-sm border border-zinc-700/50 shadow-sm" {...props}>
+              <code className="bg-zinc-800/80 text-indigo-300 px-1.5 py-0.5 rounded font-mono text-sm border border-zinc-700/50 shadow-sm" {...rest}>
                 {children}
               </code>
             );
