@@ -8,6 +8,7 @@ interface SEOProps {
 	image?: string;
 	type?: "website" | "article";
 	url?: string;
+	date?: string;
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -16,6 +17,7 @@ const SEO: React.FC<SEOProps> = ({
 	image,
 	type = "website",
 	url,
+	date,
 }) => {
 	const siteTitle = USER_CONFIG.name + " | " + USER_CONFIG.lab;
 	const pageTitle = title ? `${title} | ${USER_CONFIG.lab}` : siteTitle;
@@ -24,6 +26,41 @@ const SEO: React.FC<SEOProps> = ({
 	const metaImage = image || USER_CONFIG.avatar;
 	const siteUrl = USER_CONFIG.social.website;
 	const currentUrl = url || siteUrl;
+
+	// Structured Data (JSON-LD)
+	const schemaData =
+		type === "article"
+			? {
+					"@context": "https://schema.org",
+					"@type": "Article",
+					headline: title,
+					description: metaDescription,
+					image: metaImage,
+					author: {
+						"@type": "Person",
+						name: USER_CONFIG.name,
+						url: USER_CONFIG.social.website,
+					},
+					publisher: {
+						"@type": "Organization",
+						name: USER_CONFIG.lab,
+						logo: {
+							"@type": "ImageObject",
+							url: USER_CONFIG.avatar,
+						},
+					},
+					datePublished: date,
+					mainEntityOfPage: {
+						"@type": "WebPage",
+						"@id": currentUrl,
+					},
+				}
+			: {
+					"@context": "https://schema.org",
+					"@type": "WebSite",
+					name: USER_CONFIG.lab,
+					url: siteUrl,
+				};
 
 	return (
 		<Helmet>
@@ -46,6 +83,9 @@ const SEO: React.FC<SEOProps> = ({
 			<meta name="twitter:title" content={pageTitle} />
 			<meta name="twitter:description" content={metaDescription} />
 			<meta name="twitter:image" content={metaImage} />
+
+			{/* Structured Data */}
+			<script type="application/ld+json">{JSON.stringify(schemaData)}</script>
 		</Helmet>
 	);
 };

@@ -137,4 +137,60 @@ await Bun.write(join(OUT_DIR, "404.html"), updatedHtml);
 
 await Bun.write(join(OUT_DIR, "index.html"), updatedHtml);
 
+// 6. Generate Sitemap & Robots.txt
+console.log("Generating sitemap.xml and robots.txt...");
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${BASE_URL}/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+${IDEAS.map(
+	(idea) => `  <url>
+    <loc>${BASE_URL}/idea/${idea.id}</loc>
+    <lastmod>${idea.date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`,
+).join("\n")}
+</urlset>`;
+
+await Bun.write(join(OUT_DIR, "sitemap.xml"), sitemap);
+
+const robotsTxt = `User-agent: *
+Allow: /
+Sitemap: ${BASE_URL}/sitemap.xml
+`;
+
+await Bun.write(join(OUT_DIR, "robots.txt"), robotsTxt);
+
+// 7. Generate RSS Feed
+console.log("Generating RSS feed...");
+
+const rss = `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>${USER_CONFIG.lab}</title>
+  <link>${BASE_URL}</link>
+  <description>${USER_CONFIG.bio.replace("%NAME%", USER_CONFIG.name)}</description>
+  <language>en-us</language>
+  <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+  <atom:link href="${BASE_URL}/rss.xml" rel="self" type="application/rss+xml" />
+  ${IDEAS.map(
+		(idea) => `
+  <item>
+    <title><![CDATA[${idea.title}]]></title>
+    <link>${BASE_URL}/idea/${idea.id}</link>
+    <guid>${BASE_URL}/idea/${idea.id}</guid>
+    <pubDate>${new Date(idea.date).toUTCString()}</pubDate>
+    <description><![CDATA[${idea.subtitle}]]></description>
+  </item>`,
+	).join("")}
+</channel>
+</rss>`;
+
+await Bun.write(join(OUT_DIR, "rss.xml"), rss);
+
 console.log("Build complete!");

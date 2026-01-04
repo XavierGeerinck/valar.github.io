@@ -78,6 +78,7 @@ const IdeaDetail: React.FC = () => {
 				description={idea.subtitle}
 				image={idea.coverImage}
 				type="article"
+				date={idea.date}
 			/>
 			<div className="fixed inset-0 bg-grid z-[-1] opacity-10 pointer-events-none" />
 
