@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useUI } from "../context/UIContext";
 import ScrambleText from "../components/ScrambleText";
+import { GlobeAnimation } from "../components/GlobeAnimation";
 import { TechBadge } from "../components/SketchElements";
 import { useIdeas } from "../hooks/useIdeas";
 import SEO from "../components/SEO";
@@ -91,38 +92,32 @@ const Home: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="flex flex-col gap-6">
-					<div className="inline-flex items-center gap-2 px-2 py-1 bg-indigo-500/10 border border-indigo-500/20 w-fit">
-						<FlaskConical className="w-3 h-3 text-indigo-400" />
-						<span className="text-[10px] font-mono text-indigo-300 uppercase tracking-widest">
-							Research Directive 2025
-						</span>
-					</div>
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+					<div className="lg:col-span-2 flex flex-col gap-6">
+						<div className="inline-flex items-center gap-2 px-2 py-1 bg-indigo-500/10 border border-indigo-500/20 w-fit">
+							<FlaskConical className="w-3 h-3 text-indigo-400" />
+							<span className="text-[10px] font-mono text-indigo-300 uppercase tracking-widest">
+								Research Directive {new Date().getFullYear()}
+							</span>
+						</div>
 
-					<h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight font-space max-w-4xl leading-none">
-						BUILDING THE <br />
-						<span className="text-indigo-500">
-							<ScrambleText text="IMPOSSIBLE" />
-						</span>
-					</h1>
+						<h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight font-space max-w-4xl leading-none">
+							BUILDING THE <br />
+							<span className="text-indigo-500">
+								<ScrambleText text="IMPOSSIBLE" />
+							</span>
+						</h1>
 
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
-						<div className="md:col-span-2">
+						<div className="mt-4">
 							{/* Dynamically rendered bio to keep the structure intact but name configurable */}
 							{renderBio()}
 						</div>
-						<div className="border-l border-zinc-800 pl-6 flex flex-col justify-center space-y-2">
-							<div className="flex justify-between text-xs font-mono text-zinc-500">
-								<span>EXPERIMENTS</span>
-								<span className="text-zinc-200">{ideas.length}</span>
-							</div>
-							<div className="flex justify-between text-xs font-mono text-zinc-500">
-								<span>SUCCESS RATE</span>
-								<span className="text-zinc-200">73.4%</span>
-							</div>
-							<div className="w-full h-1 bg-zinc-900 mt-2">
-								<div className="h-full bg-indigo-500 w-[73.4%]" />
-							</div>
+					</div>
+
+					<div className="lg:col-span-1 relative hidden lg:block">
+						<div className="absolute inset-y-0 left-0 border-l border-zinc-800/50 -my-20" />
+						<div className="h-full min-h-[500px] flex items-center justify-center -mt-20">
+							<GlobeAnimation />
 						</div>
 					</div>
 				</div>

@@ -1,6 +1,13 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Terminal, Activity, Cpu, Radio, LayoutGrid } from "lucide-react";
+import {
+	Terminal,
+	Activity,
+	Cpu,
+	Radio,
+	LayoutGrid,
+	BookOpen,
+} from "lucide-react";
 import { useUI } from "../context/UIContext";
 
 const Header: React.FC = () => {
@@ -14,14 +21,14 @@ const Header: React.FC = () => {
 				{/* Brand */}
 				<Link to="/" className="flex items-center gap-3 group">
 					<div className="w-8 h-8 bg-zinc-900 border border-zinc-700 flex items-center justify-center group-hover:border-indigo-500 transition-colors">
-						<Cpu className="w-4 h-4 text-zinc-400 group-hover:text-indigo-400" />
+						<BookOpen className="w-4 h-4 text-zinc-400 group-hover:text-indigo-400" />
 					</div>
 					<div className="flex flex-col">
-						<span className="font-mono font-bold text-sm text-zinc-200 tracking-tight leading-none group-hover:text-white">
-							MOONSHOT_LABS
+						<span className="font-mono font-bold text-sm text-zinc-200 leading-none group-hover:text-white">
+							PAPERLENS
 						</span>
 						<span className="text-[9px] text-zinc-600 font-mono tracking-widest uppercase leading-none mt-1">
-							PROTOTYPING FACILITY
+							RESEARCH LAB
 						</span>
 					</div>
 				</Link>

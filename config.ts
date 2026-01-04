@@ -1,12 +1,12 @@
 export const USER_CONFIG = {
 	name: "Xavier Geerinck",
 	role: "CTO",
-	lab: "Moonshot Labs",
+	lab: "PaperLens",
 	avatar: "https://github.com/xaviergeerinck.png", // Fallback will use ui-avatars if this fails
 	email: "xavier@m18x.com",
-	location: "Digital Cortex",
-	clearance: "Lvl 5 (Admin)",
-	bio: "This is my digital workbench. I am %NAME%, and this is a collection of prototypes, whitepapers, and experiments aimed at pushing the boundaries of software and science.",
+	location: "Scrydon",
+	clearance: "Sovereign",
+	bio: "Welcome to PaperLens. I am %NAME%, and this is my research lab for exploring advanced software concepts, architectural patterns, and experimental prototypes.",
 	social: {
 		github: "https://github.com/xaviergeerinck",
 		twitter: "https://twitter.com/XavierGeerinck",
