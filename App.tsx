@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Home from "./pages/Home";
 import IdeaDetail from "./pages/IdeaDetail";
@@ -53,7 +53,7 @@ const App: React.FC = () => {
 	return (
 		<HelmetProvider>
 			<UIProvider>
-				<HashRouter>
+				<BrowserRouter>
 					<ScrollToTop />
 					<BackgroundLayer />
 					{/* Removed bg-zinc-950 to allow background components to show through */}
@@ -68,7 +68,7 @@ const App: React.FC = () => {
 						<Footer />
 						<ContactModal />
 					</div>
-				</HashRouter>
+				</BrowserRouter>
 			</UIProvider>
 		</HelmetProvider>
 	);

@@ -9,7 +9,8 @@ const SubQuadraticSimulation: React.FC = () => {
 			contextLength: 1024,
 		},
 		onTick: (prev) => {
-			if (prev.contextLength < 131072) { // 128k limit
+			if (prev.contextLength < 131072) {
+				// 128k limit
 				return { ...prev, contextLength: prev.contextLength * 1.5 };
 			}
 			return prev;
@@ -25,29 +26,34 @@ const SubQuadraticSimulation: React.FC = () => {
 
 	// 1. Memory Calculation (GB)
 	// Transformer: KV Cache = 2 * Layers * Dim * SeqLen * Bytes
-	const transformerMemGB = (2 * LAYERS * HIDDEN_DIM * state.contextLength * BYTES_PER_PARAM) / 1e9;
+	const transformerMemGB =
+		(2 * LAYERS * HIDDEN_DIM * state.contextLength * BYTES_PER_PARAM) / 1e9;
 	// SSM: Recurrent State = Layers * Dim * StateDim * Bytes
 	const ssmMemGB = (LAYERS * HIDDEN_DIM * STATE_DIM * BYTES_PER_PARAM) / 1e9;
 
 	// 2. Compute Cost (Relative Operations per Token)
 	// Transformer: Attention requires scanning all previous tokens (Linear per step -> Quadratic total)
-	const transformerOps = state.contextLength; 
+	const transformerOps = state.contextLength;
 	// SSM: Fixed state update (Constant per step -> Linear total)
 	const ssmOps = STATE_DIM * 100; // Constant baseline
 
 	const maxMem = 80; // 80GB A100 VRAM limit
 	const maxOps = 131072; // Max context for visualization
 
-	const getBarHeight = (val: number, max: number) => Math.min(100, (val / max) * 100);
+	const getBarHeight = (val: number, max: number) =>
+		Math.min(100, (val / max) * 100);
 
 	return (
 		<div className="flex flex-col gap-4 p-4 bg-slate-900 text-slate-100 rounded-xl">
 			<SchematicCard title="SCALING_LAW_COMPARISON (7B MODEL)">
 				<div className="flex justify-center mb-6">
 					<div className="bg-slate-800 px-6 py-3 rounded-lg border border-slate-700 text-center">
-						<div className="text-xs text-slate-500 uppercase font-bold mb-1">Sequence Length</div>
+						<div className="text-xs text-slate-500 uppercase font-bold mb-1">
+							Sequence Length
+						</div>
 						<div className="text-3xl font-mono text-white">
-							{Math.round(state.contextLength).toLocaleString()} <span className="text-sm text-slate-500">tokens</span>
+							{Math.round(state.contextLength).toLocaleString()}{" "}
+							<span className="text-sm text-slate-500">tokens</span>
 						</div>
 					</div>
 				</div>
@@ -63,15 +69,26 @@ const SubQuadraticSimulation: React.FC = () => {
 							{/* Memory Metric */}
 							<div className="space-y-2">
 								<div className="flex justify-between text-[10px] font-mono uppercase text-slate-500">
-									<span className="flex items-center gap-1"><Database size={10}/> KV Cache (VRAM)</span>
-									<span className={transformerMemGB > maxMem ? "text-red-500 font-bold" : "text-slate-300"}>
-										{transformerMemGB.toFixed(2)} GB {transformerMemGB > maxMem && "(OOM)"}
+									<span className="flex items-center gap-1">
+										<Database size={10} /> KV Cache (VRAM)
+									</span>
+									<span
+										className={
+											transformerMemGB > maxMem
+												? "text-red-500 font-bold"
+												: "text-slate-300"
+										}
+									>
+										{transformerMemGB.toFixed(2)} GB{" "}
+										{transformerMemGB > maxMem && "(OOM)"}
 									</span>
 								</div>
 								<div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-									<div 
+									<div
 										className={`h-full transition-all duration-300 ${transformerMemGB > maxMem ? "bg-red-600" : "bg-red-500"}`}
-										style={{ width: `${getBarHeight(transformerMemGB, maxMem)}%` }} 
+										style={{
+											width: `${getBarHeight(transformerMemGB, maxMem)}%`,
+										}}
 									/>
 								</div>
 							</div>
@@ -79,20 +96,26 @@ const SubQuadraticSimulation: React.FC = () => {
 							{/* Compute Metric */}
 							<div className="space-y-2">
 								<div className="flex justify-between text-[10px] font-mono uppercase text-slate-500">
-									<span className="flex items-center gap-1"><Zap size={10}/> Compute / Token</span>
+									<span className="flex items-center gap-1">
+										<Zap size={10} /> Compute / Token
+									</span>
 									<span className="text-slate-300">O(N) Scaling</span>
 								</div>
 								<div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-									<div 
+									<div
 										className="h-full bg-red-500 transition-all duration-300"
-										style={{ width: `${getBarHeight(transformerOps, maxOps)}%` }} 
+										style={{
+											width: `${getBarHeight(transformerOps, maxOps)}%`,
+										}}
 									/>
 								</div>
 							</div>
 						</div>
 
 						<div className="p-3 bg-slate-800/30 rounded border border-slate-700 text-[11px] text-slate-400 leading-relaxed mt-4">
-							<strong className="text-red-400">Linear Memory Growth:</strong> Storing Key-Value pairs for 128k tokens requires ~67GB VRAM, nearly filling an A100 GPU purely with cache.
+							<strong className="text-red-400">Linear Memory Growth:</strong>{" "}
+							Storing Key-Value pairs for 128k tokens requires ~67GB VRAM,
+							nearly filling an A100 GPU purely with cache.
 						</div>
 					</div>
 
@@ -106,19 +129,24 @@ const SubQuadraticSimulation: React.FC = () => {
 							{/* Memory Metric */}
 							<div className="space-y-2">
 								<div className="flex justify-between text-[10px] font-mono uppercase text-slate-500">
-									<span className="flex items-center gap-1"><Database size={10}/> Recurrent State</span>
+									<span className="flex items-center gap-1">
+										<Database size={10} /> Recurrent State
+									</span>
 									<span className="text-emerald-400 font-bold">
 										{ssmMemGB.toFixed(4)} GB
 									</span>
 								</div>
 								<div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
-									<div 
+									<div
 										className="h-full bg-emerald-500 transition-all duration-300"
-										style={{ width: `${getBarHeight(ssmMemGB, maxMem)}%` }} 
+										style={{ width: `${getBarHeight(ssmMemGB, maxMem)}%` }}
 									/>
 									{/* Pulse animation to show activity despite constant size */}
 									{isRunning && (
-										<div className="absolute inset-0 bg-white/20 animate-pulse" style={{ width: `${getBarHeight(ssmMemGB, maxMem)}%` }} />
+										<div
+											className="absolute inset-0 bg-white/20 animate-pulse"
+											style={{ width: `${getBarHeight(ssmMemGB, maxMem)}%` }}
+										/>
 									)}
 								</div>
 							</div>
@@ -126,13 +154,15 @@ const SubQuadraticSimulation: React.FC = () => {
 							{/* Compute Metric */}
 							<div className="space-y-2">
 								<div className="flex justify-between text-[10px] font-mono uppercase text-slate-500">
-									<span className="flex items-center gap-1"><Zap size={10}/> Compute / Token</span>
+									<span className="flex items-center gap-1">
+										<Zap size={10} /> Compute / Token
+									</span>
 									<span className="text-emerald-400">O(1) Constant</span>
 								</div>
 								<div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
-									<div 
+									<div
 										className="h-full bg-emerald-500 transition-all duration-300"
-										style={{ width: "2%" }} 
+										style={{ width: "2%" }}
 									/>
 									{/* Activity indicator */}
 									{isRunning && (
@@ -143,7 +173,9 @@ const SubQuadraticSimulation: React.FC = () => {
 						</div>
 
 						<div className="p-3 bg-emerald-900/10 rounded border border-emerald-500/20 text-[11px] text-slate-400 leading-relaxed mt-4">
-							<strong className="text-emerald-400">Constant Memory:</strong> The SSM state is fixed at ~4MB regardless of sequence length, allowing theoretically infinite context on consumer hardware.
+							<strong className="text-emerald-400">Constant Memory:</strong> The
+							SSM state is fixed at ~4MB regardless of sequence length, allowing
+							theoretically infinite context on consumer hardware.
 						</div>
 					</div>
 				</div>
@@ -151,15 +183,23 @@ const SubQuadraticSimulation: React.FC = () => {
 				{/* Explanation Notes */}
 				<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-6">
 					<div className="p-3 bg-red-900/10 border border-red-500/20 rounded-lg">
-						<h4 className="text-[10px] font-bold text-red-400 uppercase mb-1">What to watch for: The Memory Wall</h4>
+						<h4 className="text-[10px] font-bold text-red-400 uppercase mb-1">
+							What to watch for: The Memory Wall
+						</h4>
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							Notice how the <span className="text-red-400 font-bold">KV Cache</span> (Top Bar) fills up the GPU memory as sequence length increases. This is the primary bottleneck for long-context Transformers.
+							Notice how the{" "}
+							<span className="text-red-400 font-bold">KV Cache</span> (Top Bar)
+							fills up the GPU memory as sequence length increases. This is the
+							primary bottleneck for long-context Transformers.
 						</p>
 					</div>
 					<div className="p-3 bg-emerald-900/10 border border-emerald-500/20 rounded-lg">
-						<h4 className="text-[10px] font-bold text-emerald-400 uppercase mb-1">What to watch for: Constant State</h4>
+						<h4 className="text-[10px] font-bold text-emerald-400 uppercase mb-1">
+							What to watch for: Constant State
+						</h4>
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							The SSM state remains tiny (~4MB). This means you can process a 1M token book with the same RAM usage as a short sentence.
+							The SSM state remains tiny (~4MB). This means you can process a 1M
+							token book with the same RAM usage as a short sentence.
 						</p>
 					</div>
 				</div>

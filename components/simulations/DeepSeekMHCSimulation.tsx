@@ -53,7 +53,7 @@ const DeepSeekMHCSimulation: React.FC = () => {
 
 			// mHC Mode: Doubly Stochastic constraint keeps signal near 1.0
 			// Simulate small perturbations that are corrected (Sinkhorn normalization)
-			const perturbation = (Math.random() * 0.4 - 0.2); 
+			const perturbation = Math.random() * 0.4 - 0.2;
 			// The signal drifts but is constantly pulled back to 1.0 by the constraints
 			const rawSignal = prev.mhcSignal + perturbation;
 			const newMhcSignal = rawSignal + (1.0 - rawSignal) * 0.8; // Strong correction
@@ -61,7 +61,8 @@ const DeepSeekMHCSimulation: React.FC = () => {
 			return {
 				...prev,
 				layer: prev.layer + 1,
-				wildSignal: newWildStatus === "STABLE" ? newWildSignal : prev.wildSignal,
+				wildSignal:
+					newWildStatus === "STABLE" ? newWildSignal : prev.wildSignal,
 				mhcSignal: newMhcSignal,
 				wildStatus: newWildStatus,
 				wildHistory: [...prev.wildHistory, newWildSignal].slice(-50),
@@ -109,7 +110,13 @@ const DeepSeekMHCSimulation: React.FC = () => {
 						<div className="flex flex-col gap-2">
 							<div className="flex justify-between text-[10px] font-mono text-slate-500 uppercase">
 								<span>Signal Magnitude</span>
-								<span className={state.wildStatus !== "STABLE" ? "text-red-500 font-bold" : ""}>
+								<span
+									className={
+										state.wildStatus !== "STABLE"
+											? "text-red-500 font-bold"
+											: ""
+									}
+								>
 									{state.wildSignal.toFixed(4)}
 								</span>
 							</div>
@@ -137,8 +144,9 @@ const DeepSeekMHCSimulation: React.FC = () => {
 						</div>
 
 						<p className="text-[11px] text-slate-400 leading-relaxed italic">
-							Without constraints, small errors in weight initialization compound
-							exponentially across layers, leading to NaN or zeroed signals.
+							Without constraints, small errors in weight initialization
+							compound exponentially across layers, leading to NaN or zeroed
+							signals.
 						</p>
 					</div>
 
@@ -171,35 +179,55 @@ const DeepSeekMHCSimulation: React.FC = () => {
 						</div>
 
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							mHC uses <span className="text-emerald-400 font-bold">Doubly Stochastic</span> constraints. Every row and column sums to 1.0, ensuring energy conservation.
+							mHC uses{" "}
+							<span className="text-emerald-400 font-bold">
+								Doubly Stochastic
+							</span>{" "}
+							constraints. Every row and column sums to 1.0, ensuring energy
+							conservation.
 						</p>
 					</div>
 				</div>
 
 				{/* Layer Counter */}
 				<div className="mt-4 flex items-center justify-center gap-4 bg-slate-950 p-2 rounded border border-slate-800">
-					<div className="text-[10px] font-mono text-slate-500 uppercase">Depth Progress</div>
+					<div className="text-[10px] font-mono text-slate-500 uppercase">
+						Depth Progress
+					</div>
 					<div className="flex-1 h-1 bg-slate-800 rounded-full overflow-hidden">
-						<div 
-							className="h-full bg-blue-500 transition-all duration-300" 
+						<div
+							className="h-full bg-blue-500 transition-all duration-300"
 							style={{ width: `${state.layer}%` }}
 						/>
 					</div>
-					<div className="text-xs font-mono text-blue-400">L{state.layer}/100</div>
+					<div className="text-xs font-mono text-blue-400">
+						L{state.layer}/100
+					</div>
 				</div>
 
 				{/* Explanation Notes */}
 				<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-6">
 					<div className="p-3 bg-blue-900/10 border border-blue-500/20 rounded-lg">
-						<h4 className="text-[10px] font-bold text-blue-400 uppercase mb-1">What to watch for: Signal Survival</h4>
+						<h4 className="text-[10px] font-bold text-blue-400 uppercase mb-1">
+							What to watch for: Signal Survival
+						</h4>
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							Notice how the <span className="text-blue-400 font-bold">Standard</span> signal eventually hits a wall (Explosion or Vanishing). mHC allows the signal to "survive" through hundreds of layers by maintaining a constant energy state.
+							Notice how the{" "}
+							<span className="text-blue-400 font-bold">Standard</span> signal
+							eventually hits a wall (Explosion or Vanishing). mHC allows the
+							signal to "survive" through hundreds of layers by maintaining a
+							constant energy state.
 						</p>
 					</div>
 					<div className="p-3 bg-emerald-900/10 border border-emerald-500/20 rounded-lg">
-						<h4 className="text-[10px] font-bold text-emerald-400 uppercase mb-1">What to watch for: Doubly Stochastic</h4>
+						<h4 className="text-[10px] font-bold text-emerald-400 uppercase mb-1">
+							What to watch for: Doubly Stochastic
+						</h4>
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							The <span className="text-emerald-400 font-bold">mHC</span> weights are iteratively normalized using the Sinkhorn-Knopp algorithm. This forces the network to act as a conservative system where information is routed but never lost.
+							The <span className="text-emerald-400 font-bold">mHC</span>{" "}
+							weights are iteratively normalized using the Sinkhorn-Knopp
+							algorithm. This forces the network to act as a conservative system
+							where information is routed but never lost.
 						</p>
 					</div>
 				</div>

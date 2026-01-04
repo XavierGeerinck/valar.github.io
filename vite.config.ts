@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, (process as any).cwd(), '');
   return {
     plugins: [react()],
-    base: './', // Vital for GitHub Pages subdirectory hosting
+    base: '/', // Vital for GitHub Pages subdirectory hosting
     build: {
       outDir: 'dist',
       sourcemap: false

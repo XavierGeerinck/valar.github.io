@@ -1,8 +1,5 @@
 import React from "react";
-import {
-	BrainCircuit,
-	Database,
-} from "lucide-react";
+import { BrainCircuit, Database } from "lucide-react";
 import { useSimulation } from "../../hooks/useSimulation";
 import { SchematicCard, SchematicButton } from "../SketchElements";
 
@@ -25,8 +22,23 @@ const BrainMimeticSimulation: React.FC = () => {
 		},
 		onTick: (prev) => {
 			const tokens = [
-				"The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog",
-				"Wait", "the", "dog", "is", "actually", "a", "robot", "!!!"
+				"The",
+				"quick",
+				"brown",
+				"fox",
+				"jumps",
+				"over",
+				"the",
+				"lazy",
+				"dog",
+				"Wait",
+				"the",
+				"dog",
+				"is",
+				"actually",
+				"a",
+				"robot",
+				"!!!",
 			];
 
 			if (prev.token >= tokens.length) {
@@ -42,7 +54,7 @@ const BrainMimeticSimulation: React.FC = () => {
 				...prev,
 				token: prev.token + 1,
 				staticMemory: [...prev.staticMemory, currentToken].slice(-5),
-				plasticMemory: isSurprising 
+				plasticMemory: isSurprising
 					? [...prev.plasticMemory, currentToken].slice(-5)
 					: prev.plasticMemory,
 				surprise: surpriseVal,
@@ -63,19 +75,31 @@ const BrainMimeticSimulation: React.FC = () => {
 						</div>
 
 						<div className="p-4 bg-slate-950 rounded border border-slate-800 min-h-[120px]">
-							<div className="text-[10px] text-slate-500 uppercase mb-2">KV Cache (Fixed Window)</div>
+							<div className="text-[10px] text-slate-500 uppercase mb-2">
+								KV Cache (Fixed Window)
+							</div>
 							<div className="flex flex-wrap gap-2">
 								{state.staticMemory.map((t, i) => (
-									<span key={i} className="px-2 py-1 bg-slate-800 rounded text-xs font-mono text-slate-400">
+									<span
+										key={i}
+										className="px-2 py-1 bg-slate-800 rounded text-xs font-mono text-slate-400"
+									>
 										{t}
 									</span>
 								))}
-								{state.staticMemory.length === 0 && <span className="text-slate-700 italic text-xs">Empty...</span>}
+								{state.staticMemory.length === 0 && (
+									<span className="text-slate-700 italic text-xs">
+										Empty...
+									</span>
+								)}
 							</div>
 						</div>
 
 						<div className="p-3 bg-slate-800/30 rounded border border-slate-700 text-[11px] text-slate-400 leading-relaxed">
-							Standard Transformers use a <span className="text-slate-300 font-bold">Read-Only</span> KV cache. They can only "see" what fits in the window and cannot learn new patterns during inference.
+							Standard Transformers use a{" "}
+							<span className="text-slate-300 font-bold">Read-Only</span> KV
+							cache. They can only "see" what fits in the window and cannot
+							learn new patterns during inference.
 						</div>
 					</div>
 
@@ -86,14 +110,23 @@ const BrainMimeticSimulation: React.FC = () => {
 						</div>
 
 						<div className="p-4 bg-slate-950 rounded border border-purple-500/30 min-h-[120px] relative overflow-hidden">
-							<div className="text-[10px] text-purple-400 uppercase mb-2">Neural Memory (Weights)</div>
+							<div className="text-[10px] text-purple-400 uppercase mb-2">
+								Neural Memory (Weights)
+							</div>
 							<div className="flex flex-wrap gap-2">
 								{state.plasticMemory.map((t, i) => (
-									<span key={i} className="px-2 py-1 bg-purple-900/30 border border-purple-500/50 rounded text-xs font-mono text-purple-200 animate-pulse">
+									<span
+										key={i}
+										className="px-2 py-1 bg-purple-900/30 border border-purple-500/50 rounded text-xs font-mono text-purple-200 animate-pulse"
+									>
 										{t}
 									</span>
 								))}
-								{state.plasticMemory.length === 0 && <span className="text-slate-700 italic text-xs">Awaiting Surprise...</span>}
+								{state.plasticMemory.length === 0 && (
+									<span className="text-slate-700 italic text-xs">
+										Awaiting Surprise...
+									</span>
+								)}
 							</div>
 							{state.surprise > 0.5 && (
 								<div className="absolute inset-0 bg-purple-500/5 animate-pulse pointer-events-none" />
@@ -102,8 +135,12 @@ const BrainMimeticSimulation: React.FC = () => {
 
 						<div className="grid grid-cols-2 gap-4">
 							<div className="p-2 bg-slate-950 rounded border border-slate-800">
-								<div className="text-[9px] text-slate-500 uppercase">Surprise</div>
-								<div className={`text-lg font-mono font-bold ${state.surprise > 0.5 ? "text-amber-400" : "text-slate-400"}`}>
+								<div className="text-[9px] text-slate-500 uppercase">
+									Surprise
+								</div>
+								<div
+									className={`text-lg font-mono font-bold ${state.surprise > 0.5 ? "text-amber-400" : "text-slate-400"}`}
+								>
 									{(state.surprise * 100).toFixed(1)}%
 								</div>
 							</div>
@@ -120,15 +157,26 @@ const BrainMimeticSimulation: React.FC = () => {
 				{/* Explanation Notes */}
 				<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-6">
 					<div className="p-3 bg-purple-900/10 border border-purple-500/20 rounded-lg">
-						<h4 className="text-[10px] font-bold text-purple-400 uppercase mb-1">What to watch for: Neural Memory</h4>
+						<h4 className="text-[10px] font-bold text-purple-400 uppercase mb-1">
+							What to watch for: Neural Memory
+						</h4>
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							Unlike the static cache, the <span className="text-purple-400 font-bold">Neural Memory</span> updates its internal weights during inference. It "learns" the robot dog fact physically, allowing for infinite context recall.
+							Unlike the static cache, the{" "}
+							<span className="text-purple-400 font-bold">Neural Memory</span>{" "}
+							updates its internal weights during inference. It "learns" the
+							robot dog fact physically, allowing for infinite context recall.
 						</p>
 					</div>
 					<div className="p-3 bg-amber-900/10 border border-amber-500/20 rounded-lg">
-						<h4 className="text-[10px] font-bold text-amber-400 uppercase mb-1">What to watch for: Surprise Gating</h4>
+						<h4 className="text-[10px] font-bold text-amber-400 uppercase mb-1">
+							What to watch for: Surprise Gating
+						</h4>
 						<p className="text-[11px] text-slate-400 leading-relaxed">
-							Updates only happen when <span className="text-amber-400 font-bold">Surprise</span> is high. This mimics biological plasticity, where the brain only rewires itself when encountering novel or contradictory information.
+							Updates only happen when{" "}
+							<span className="text-amber-400 font-bold">Surprise</span> is
+							high. This mimics biological plasticity, where the brain only
+							rewires itself when encountering novel or contradictory
+							information.
 						</p>
 					</div>
 				</div>
