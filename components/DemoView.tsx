@@ -12,6 +12,7 @@ import AsahiM1n1Simulation from "./simulations/AsahiM1n1Simulation";
 import MLASimulation from "./simulations/MLASimulation";
 import ControlTheoreticSimulation from "./simulations/ControlTheoreticSimulation";
 import JEPASimulation from "./simulations/JEPASimulation";
+import DigitalRedQueenSimulation from "./simulations/DigitalRedQueenSimulation";
 
 interface DemoViewProps {
 	simulationName?: string;
@@ -30,6 +31,7 @@ const REGISTRY: Record<string, React.FC> = {
 	MLASimulation: MLASimulation,
 	ControlTheoretic: ControlTheoreticSimulation,
 	JEPASimulation: JEPASimulation,
+	DigitalRedQueen: DigitalRedQueenSimulation,
 };
 
 const DemoView: React.FC<DemoViewProps> = ({ simulationName }) => {
